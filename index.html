@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR.js - Modelo 3D sobre QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ar.js/2.2.2/aframe-ar.min.js"></script>
+    <script>
+        AFRAME.registerComponent('model-handler', {
+            init: function () {
+                const el = this.el;
+                
+                el.addEventListener('model-loaded', () => {
+                    // Ajustar posición, escala o rotación si es necesario
+                    el.object3D.scale.set(0.5, 0.5, 0.5);
+                    console.log('¡Modelo cargado correctamente!');
+                });
+                
+                el.addEventListener('model-error', () => {
+                    console.error('Error al cargar el modelo');
+                });
+            }
+        });
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .centered {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 1;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered">Apunta la cámara al código QR</div>
+    
+    <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        renderer="logarithmicDepthBuffer: true;"
+        vr-mode-ui="enabled: false">
+        
+        <!-- Definir el marcador de tipo QR -->
+        <a-marker type="barcode" value="1">
+            <!-- Tu modelo 3D en formato GLB -->
+            <a-entity
+                gltf-model="https://raw.githubusercontent.com/Josecm20/A/main/A.glb"
+                model-handler
+                position="0 0 0"
+                rotation="0 0 0">
+            </a-entity>
+        </a-marker>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+</html>
